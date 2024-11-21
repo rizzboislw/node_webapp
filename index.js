@@ -1,6 +1,9 @@
 import e from "express";
 import { Pinecone } from "@pinecone-database/pinecone";
-import OpenAI, { Configuration, OpenOpenAIApi } from "openai";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = e();
 const port = 3000;
@@ -8,13 +11,13 @@ const port = 3000;
 app.use(e.json());
 
 const pineconeClient = new Pinecone({
-  apiKey: process.env.PINECONE_API,
+  apiKey: process.env.PINECONE_API_KEY,
 });
 
 const indexName = "beverage-data";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 app.post("/query", async (req, res) => {
@@ -36,7 +39,7 @@ app.post("/query", async (req, res) => {
 
   const prompt = `Prompt: ${query}\nCpntext: ${context}`;
 
-  const completion = await openai.createCOmpletion({
+  const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     prompt: prompt,
     max_tokens: 1024,
