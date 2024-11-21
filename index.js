@@ -37,7 +37,7 @@ app.post("/query", async (req, res) => {
     .map((match) => match.metadata.text)
     .join("\n");
 
-  const prompt = `Prompt: ${query}\nCpntext: ${context}`;
+  const prompt = `Prompt: ${query}\nContext: ${context}`;
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
