@@ -33,22 +33,26 @@ app.post("/query", async (req, res) => {
     topK: 5,
   });
 
-  const context = queryResult.matches
-    .map((match) => match.metadata.text)
-    .join("\n");
+  if (queryResult.matches && queryResult.matches.length > 0) {
+    const context = queryResult.matches
+      .map((match) => match.metadata.text)
+      .join("\n");
 
-  const prompt = `Prompt: ${query}\nContext: ${context}`;
+    const prompt = `Prompt: ${query}\nContext: ${context}`;
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    prompt: prompt,
-    max_tokens: 1024,
-    n: 1,
-    stop: null,
-    temperature: 0.1,
-  });
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      prompt: prompt,
+      max_tokens: 1024,
+      n: 1,
+      stop: null,
+      temperature: 0.1,
+    });
 
-  res.json({ response: completion.data.choices[0].text });
+    res.json({ response: completion.data.choices[0].text });
+  } else {
+    console.warn("No matches found in Pinecone");
+  }
 });
 
 app.get("/", (req, res) => {
