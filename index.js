@@ -48,6 +48,10 @@ app.post("/query", async (req, res) => {
   res.json({ response: completion.data.choices[0].text });
 });
 
+app.get("/", (req, res) => {
+  res.send("It works!");
+});
+
 app.listen(port, () => {
   console.log(`Server is running at port ${port}`);
 });
